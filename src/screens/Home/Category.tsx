@@ -1,32 +1,64 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Container, List, ListItem, Text, View } from "native-base";
-import React from "react";
-import { ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import { ScrollView, StatusBar } from "react-native";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
+import Loader from "../../components/loader";
+import { getCategoriesAction } from "../../redux/actions/category";
+import { CategoryType } from "../../redux/types/session";
 
 const Category = () => {
   const navigation = useNavigation();
+  const allCategories = useSelector(
+    (state: any) => state.sessionReducer.allCategories,
+    shallowEqual
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCategoriesAction());
+  }, []);
+
+  const handleClick = (item: CategoryType) => {
+    console.log(item);
+  };
+
   return (
-    <Container>
-      <CustomHeader title={"Category"} />
+    <StyledContainer>
+      <StatusBar barStyle="light-content" translucent />
+      <CustomHeader title={"Categories"} />
       <StyledView>
-        <List>
-          <ListItem onPress={() => navigation.navigate("Options")}>
-            <Text>Physics</Text>
-          </ListItem>
-          <ListItem>
-            <Text>Physics</Text>
-          </ListItem>
-        </List>
+        {allCategories.length ? (
+          <List>
+            {allCategories.map((cat: CategoryType, index: number) => (
+              <ListItem key={index} noBorder onPress={() => handleClick(cat)}>
+                <StyledText>{cat.name}</StyledText>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Loader />
+        )}
       </StyledView>
-    </Container>
+    </StyledContainer>
   );
 };
 
+const StyledContainer = styled(Container)`
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const StyledText = styled(Text)`
+  color: ${({ theme }) => theme.colors.text};
+`;
+
 const StyledView = styled(ScrollView)`
-  padding: 20px;
+  padding-top: 10px;
   flex: 1;
+  margin-bottom: 10px;
 `;
 
 export default Category;

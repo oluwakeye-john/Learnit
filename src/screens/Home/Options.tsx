@@ -4,13 +4,15 @@ import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
+import { StyledContainer, StyledContent } from "../../components/general";
 import Loader from "../../components/loader";
+import CustomToast from "../../utils/showToast";
 
 const Options = () => {
   return (
-    <Container>
+    <StyledContainer>
       <CustomHeader title={"Physics"} />
-      <Content>
+      <StyledContent>
         <StyledView>
           <Picker
             mode="dialog"
@@ -42,18 +44,24 @@ const Options = () => {
             <Picker.Item label="True / False" value={1} />
             <Picker.Item label="Mixed" value={1} />
           </Picker>
-          <Button block>
+          <StyledButton block onPress={CustomToast}>
             <Text>Start</Text>
-          </Button>
+          </StyledButton>
         </StyledView>
-      </Content>
-    </Container>
+      </StyledContent>
+    </StyledContainer>
   );
 };
 
 const StyledView = styled(ScrollView)`
   padding: 20px;
   flex: 1;
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const StyledButton = styled(Button)`
+  margin-top: 30px;
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 export default Options;

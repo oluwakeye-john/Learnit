@@ -1,37 +1,45 @@
-import React from "react";
-import { AppLoading } from "expo";
-import { Container, Text } from "native-base";
-import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./src/Navigator";
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
+import { theme } from "./src/theme";
+import { ThemeProvider } from "styled-components/native";
+import { AppLoading } from "expo";
 
-export default class App extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      isReady: false,
-    };
-  }
+import { Ionicons } from "@expo/vector-icons";
+import * as Font from "expo-font";
+import { Root } from "native-base";
 
-  async componentDidMount() {
+const App = () => {
+  const [isReady, setIsReady] = React.useState(false);
+  const initState = useCallback(async () => {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
       ...Ionicons.font,
     });
-    this.setState({ isReady: true });
-  }
+    setIsReady(true);
+  }, [Font]);
 
-  render() {
-    if (!this.state.isReady) {
-      return <AppLoading />;
-    }
+  useEffect(() => {
+    initState();
+  }, [initState]);
 
-    return (
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
-    );
+  if (!isReady) {
+    return <AppLoading />;
   }
-}
+  return (
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Root>
+          <NavigationContainer theme={theme}>
+            <RootNavigator />
+          </NavigationContainer>
+        </Root>
+      </ThemeProvider>
+    </Provider>
+  );
+};
+
+export default App;
