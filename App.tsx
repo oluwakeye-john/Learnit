@@ -6,6 +6,7 @@ import { store } from "./src/redux/store";
 import { theme } from "./src/theme";
 import { ThemeProvider } from "styled-components/native";
 import { AppLoading } from "expo";
+import { StatusBar } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
@@ -33,6 +34,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Root>
+          <StatusBar barStyle="light-content" translucent />
           <NavigationContainer theme={theme}>
             <RootNavigator />
           </NavigationContainer>

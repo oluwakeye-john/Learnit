@@ -1,11 +1,19 @@
-import { DIFFICULTY, Session, SessionType } from "../types/session";
+import {
+  DIFFICULTY,
+  QUESTION_TYPE,
+  Session,
+  SessionType,
+} from "../types/session";
 
 const initialState = {
-  numberOfQuestions: 0,
+  info: {
+    numberOfQuestions: 0,
+    difficulty: DIFFICULTY.easy,
+    questionType: QUESTION_TYPE.MIXED,
+  },
   questions: [],
   answers: {},
   score: 0,
-  difficulty: DIFFICULTY.easy,
   category: {
     id: 0,
     name: "",
@@ -16,10 +24,19 @@ const initialState = {
 export const sessionReducer = (state: Session = initialState, action: any) => {
   switch (action.type) {
     case SessionType.UPDATE_ALL_CATEGORIES:
-      console.log(action, ">>>>>>>>>>>>>");
       return {
         ...state,
         allCategories: action.payload,
+      };
+    case SessionType.UPDATE_SELECTED_CATEGORY:
+      return {
+        ...state,
+        category: action.payload,
+      };
+    case SessionType.UPDATE_OPTIONS:
+      return {
+        ...state,
+        info: action.payload,
       };
     default:
       return state;

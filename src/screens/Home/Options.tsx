@@ -1,54 +1,110 @@
-import { useTheme } from "@react-navigation/native";
-import { Button, Container, Picker, Text, View, Content } from "native-base";
-import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Picker, Text, View, Content } from "native-base";
+import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
 import { StyledContainer, StyledContent } from "../../components/general";
-import Loader from "../../components/loader";
+import { updateOptions } from "../../redux/actions/session";
+import { DIFFICULTY, QUESTION_TYPE } from "../../redux/types/session";
 import CustomToast from "../../utils/showToast";
+import { validateOptions } from "../../utils/validation";
+
+const initial = {
+  numberOfQuestions: 0,
+  difficulty: DIFFICULTY.empty,
+  questionType: QUESTION_TYPE.EMPTY,
+};
+
+enum INPUT_OPTIONS {
+  numberOfQuestions = "numberOfQuestions",
+  difficulty = "difficulty",
+  questionType = "questionType",
+}
 
 const Options = () => {
+  const [input, setInput] = useState(initial);
+  const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const handleChange = (name: INPUT_OPTIONS, value: any) => {
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = () => {
+    console.log(input);
+
+    const error = validateOptions(input);
+    if (error) {
+      return CustomToast(error);
+    }
+
+    dispatch(updateOptions(input));
+    navigation.navigate("Quiz");
+  };
+
   return (
     <StyledContainer>
       <CustomHeader title={"Physics"} />
-      <StyledContent>
+      <View style={{ flex: 1, position: "relative" }}>
         <StyledView>
           <Picker
             mode="dialog"
             placeholder="Hello world"
             note
-            selectedValue={0}
+            selectedValue={input.numberOfQuestions}
+            onValueChange={(value: any) =>
+              handleChange(INPUT_OPTIONS.numberOfQuestions, value)
+            }
           >
             <Picker.Item label="-- Number of Questions --" value={1} />
-            <Picker.Item label="10" value={1} />
-            <Picker.Item label="20" value={1} />
-            <Picker.Item label="30" value={1} />
-            <Picker.Item label="40" value={1} />
-            <Picker.Item label="50" value={1} />
+            <Picker.Item label="10 Questions" value={10} />
+            <Picker.Item label="20 Questions" value={20} />
+            <Picker.Item label="30 Questions" value={30} />
           </Picker>
           <Picker
             mode="dialog"
             placeholder="Hello world"
             note
-            selectedValue={0}
+            selectedValue={input.difficulty}
+            onValueChange={(value: any) =>
+              handleChange(INPUT_OPTIONS.difficulty, value)
+            }
           >
-            <Picker.Item label="-- Difficulty --" value={1} />
-            <Picker.Item label="Easy" value={1} />
-            <Picker.Item label="Medium" value={1} />
-            <Picker.Item label="Hard" value={1} />
+            <Picker.Item label="-- Difficulty --" value={DIFFICULTY.empty} />
+            <Picker.Item label="Easy" value={DIFFICULTY.easy} />
+            <Picker.Item label="Medium" value={DIFFICULTY.medium} />
+            <Picker.Item label="Hard" value={DIFFICULTY.hard} />
           </Picker>
-          <Picker mode="dialog" placeholder="Type" note selectedValue={0}>
-            <Picker.Item label="-- Question Type --" value={1} />
-            <Picker.Item label="Multiple Choice" value={1} />
-            <Picker.Item label="True / False" value={1} />
-            <Picker.Item label="Mixed" value={1} />
+
+          <Picker
+            mode="dialog"
+            placeholder="Type"
+            note
+            selectedValue={input.questionType}
+            onValueChange={(value: any) =>
+              handleChange(INPUT_OPTIONS.questionType, value)
+            }
+          >
+            <Picker.Item label="-- Question Type --" value={DIFFICULTY.empty} />
+            <Picker.Item
+              label="Multiple Choice"
+              value={QUESTION_TYPE.MULTIPLE}
+            />
+            <Picker.Item label="True / False" value={QUESTION_TYPE.BOOLEAN} />
+            <Picker.Item label="Mixed" value={QUESTION_TYPE.MIXED} />
           </Picker>
-          <StyledButton block onPress={CustomToast}>
+          <StyledButton block onPress={handleSubmit}>
             <Text>Start</Text>
           </StyledButton>
         </StyledView>
-      </StyledContent>
+        <LowerView></LowerView>
+      </View>
     </StyledContainer>
   );
 };
@@ -57,6 +113,13 @@ const StyledView = styled(ScrollView)`
   padding: 20px;
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const LowerView = styled(View)`
+  /* position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px; */
 `;
 
 const StyledButton = styled(Button)`

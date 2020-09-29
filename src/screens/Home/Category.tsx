@@ -1,13 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
-import { Container, List, ListItem, Text, View } from "native-base";
-import React, { useEffect } from "react";
-import { ScrollView, StatusBar } from "react-native";
+import { Container, List, Text, ListItem, Content } from "native-base";
+import React, { useEffect, useState } from "react";
+import { ScrollView, RefreshControl, FlatList, View } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { AnyAction } from "redux";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
 import Loader from "../../components/loader";
 import { getCategoriesAction } from "../../redux/actions/category";
+import { updateSelectedCategory } from "../../redux/actions/session";
 import { CategoryType } from "../../redux/types/session";
+
+const Item = ({ item, handleClick }: any) => {
+  return (
+    <ListItem noBorder onPress={() => handleClick(item)}>
+      <StyledText>{item.name}</StyledText>
+    </ListItem>
+  );
+};
 
 const Category = () => {
   const navigation = useNavigation();
@@ -18,31 +28,44 @@ const Category = () => {
 
   const dispatch = useDispatch();
 
+  const updateList = () => {
+    setRefreshing(true);
+    dispatch(getCategoriesAction(onFetch));
+  };
+
+  const onFetch = () => {
+    setRefreshing(false);
+  };
+
   useEffect(() => {
-    dispatch(getCategoriesAction());
+    updateList();
   }, []);
 
   const handleClick = (item: CategoryType) => {
-    console.log(item);
+    dispatch(updateSelectedCategory(item));
+    navigation.navigate("Options");
   };
+
+  const [refreshing, setRefreshing] = useState(false);
 
   return (
     <StyledContainer>
-      <StatusBar barStyle="light-content" translucent />
       <CustomHeader title={"Categories"} />
-      <StyledView>
-        {allCategories.length ? (
-          <List>
-            {allCategories.map((cat: CategoryType, index: number) => (
-              <ListItem key={index} noBorder onPress={() => handleClick(cat)}>
-                <StyledText>{cat.name}</StyledText>
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <Loader />
-        )}
-      </StyledView>
+      {allCategories.length ? (
+        <View>
+          <List
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={updateList} />
+            }
+            dataArray={allCategories}
+            renderItem={(props: any) => (
+              <Item {...props} handleClick={handleClick} />
+            )}
+          />
+        </View>
+      ) : (
+        <Loader />
+      )}
     </StyledContainer>
   );
 };

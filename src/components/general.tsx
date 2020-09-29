@@ -4,6 +4,7 @@ import { Container, Content } from "native-base";
 
 export const StyledContainer = styled(Container)`
   color: ${({ theme }) => theme.colors.text};
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 export const StyledContent = styled(Content)`

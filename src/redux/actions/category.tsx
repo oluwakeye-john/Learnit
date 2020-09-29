@@ -3,11 +3,12 @@ import { getCategoriesCall } from "../../services/request";
 import { action } from "typesafe-actions";
 import { SessionType } from "../types/session";
 
-export const getCategoriesAction = () => {
+export const getCategoriesAction = (onSuccess?: Function) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await getCategoriesCall();
       dispatch(getCategoriesActionSuccess(response.data.trivia_categories));
+      onSuccess && onSuccess();
     } catch (error) {
       console.error(error.response || error.message);
     }

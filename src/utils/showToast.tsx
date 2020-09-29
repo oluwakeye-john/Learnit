@@ -1,9 +1,9 @@
 import { Toast } from "native-base";
 
-const CustomToast = () => {
+const CustomToast = (text: string, type: any = "danger") => {
   Toast.show({
-    text: "hello -world",
-    type: "danger",
+    text,
+    type,
   });
 };
 
