@@ -1,10 +1,11 @@
 export interface Session {
   info: OptionsType;
   category: CategoryType;
-  questions: any[];
+  questions: Question[];
   answers: any;
   score: number;
   allCategories: CategoryType[];
+  currentQuestion: number;
 }
 
 export enum DIFFICULTY {
@@ -32,8 +33,26 @@ export interface OptionsType {
   questionType: QUESTION_TYPE;
 }
 
+export interface Question {
+  category: string;
+  correct_answer: string;
+  incorrect_answers: any[];
+  question: string;
+  type: QUESTION_TYPE;
+}
+
+export interface StartQuizPayload {
+  numberOfQuestions: number;
+  difficulty: DIFFICULTY;
+  questionType: QUESTION_TYPE;
+  category: CategoryType;
+}
+
 export enum SessionType {
   UPDATE_ALL_CATEGORIES = "UPDATE_ALL_CATEGORIES",
   UPDATE_SELECTED_CATEGORY = "UPDATE_SELECTED_CATEGORY",
   UPDATE_OPTIONS = "UPDATE_OPTIONS",
+  UPDATE_QUESTIONS = "UPDATE_QUESTIONS",
+  UPDATE_CURRENT_QUESTION = "UPDATE_CURRENT_QUESTION",
+  UPDATE_ANSWERS = "UPDATE_ANSWERS",
 }

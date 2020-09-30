@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Picker, Text, View, Content } from "native-base";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
 import { StyledContainer, StyledContent } from "../../components/general";
@@ -24,10 +24,19 @@ enum INPUT_OPTIONS {
 }
 
 const Options = () => {
-  const [input, setInput] = useState(initial);
   const navigation = useNavigation();
+  const [input, setInput] = useState(initial);
 
   const dispatch = useDispatch();
+
+  const category = useSelector(
+    (state: any) => state.sessionReducer.category,
+    shallowEqual
+  );
+
+  navigation.setOptions({
+    title: category.name,
+  });
 
   const handleChange = (name: INPUT_OPTIONS, value: any) => {
     setInput({
@@ -55,7 +64,7 @@ const Options = () => {
         <StyledView>
           <Picker
             mode="dialog"
-            placeholder="Hello world"
+            placeholder="Number of Questions"
             note
             selectedValue={input.numberOfQuestions}
             onValueChange={(value: any) =>
@@ -69,7 +78,7 @@ const Options = () => {
           </Picker>
           <Picker
             mode="dialog"
-            placeholder="Hello world"
+            placeholder="Difficulty"
             note
             selectedValue={input.difficulty}
             onValueChange={(value: any) =>

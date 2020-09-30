@@ -19,6 +19,7 @@ const initialState = {
     name: "",
   },
   allCategories: [],
+  currentQuestion: 0,
 };
 
 export const sessionReducer = (state: Session = initialState, action: any) => {
@@ -37,6 +38,21 @@ export const sessionReducer = (state: Session = initialState, action: any) => {
       return {
         ...state,
         info: action.payload,
+      };
+    case SessionType.UPDATE_QUESTIONS:
+      return {
+        ...state,
+        questions: action.payload,
+      };
+    case SessionType.UPDATE_CURRENT_QUESTION:
+      return {
+        ...state,
+        currentQuestion: action.payload,
+      };
+    case SessionType.UPDATE_ANSWERS:
+      return {
+        ...state,
+        answers: action.payload,
       };
     default:
       return state;

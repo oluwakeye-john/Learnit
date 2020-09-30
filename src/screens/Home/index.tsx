@@ -19,7 +19,7 @@ const HomeNavigator = () => {
       <Stack.Screen
         name="Options"
         component={Options}
-        options={{ title: "Choose options" }}
+        // options={{ title: "Choose options" }}
       />
       <Stack.Screen name="Quiz" component={Quiz} options={{ title: "Quiz" }} />
     </Stack.Navigator>
