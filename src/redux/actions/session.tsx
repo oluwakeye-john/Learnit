@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import { action } from "typesafe-actions";
 import {
+  Answer,
   CategoryType,
   OptionsType,
   Question,
@@ -21,10 +22,14 @@ export const updateOptions = (payload: OptionsType) => {
 export const startQuiz = (payload: StartQuizPayload, onSuccess?: Function) => {
   console.log("here1");
   return async (dispatch: Dispatch) => {
-    console.log("here2");
-    dispatch(updateQuestionsAction([]));
     try {
+      console.log("here2");
+      dispatch(updateQuestionsAction([]));
+      dispatch(setCurrentQuestion(0));
+      dispatch(_updateAnswers({}));
+      dispatch(updateScore({}));
       const response = await getQuestionsCall(payload);
+      console.log(response.data);
       dispatch(updateQuestionsAction(response.data.results));
       onSuccess && onSuccess();
     } catch (error) {
@@ -46,6 +51,26 @@ export const setCurrentQuestion = (number: number) => {
   return action(SessionType.UPDATE_CURRENT_QUESTION, number);
 };
 
-export const updateAnswers = (answers: any) => {
+export const updateAnswers = (payload: any) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(_updateAnswers(payload));
+    dispatch(updateScore(payload));
+  };
+};
+
+export const updateScore = (answers: any) => {
+  const answerKeys = Object.keys(answers);
+  let score = 0;
+  if (answerKeys) {
+    answerKeys.map((ans: any) => {
+      if (answers[ans].isCorrect) {
+        score += 1;
+      }
+    });
+  }
+  return action(SessionType.UPDATE_SCORE, score);
+};
+
+export const _updateAnswers = (answers: any) => {
   return action(SessionType.UPDATE_ANSWERS, answers);
 };

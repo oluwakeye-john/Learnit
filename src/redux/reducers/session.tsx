@@ -54,6 +54,11 @@ export const sessionReducer = (state: Session = initialState, action: any) => {
         ...state,
         answers: action.payload,
       };
+    case SessionType.UPDATE_SCORE:
+      return {
+        ...state,
+        score: action.payload,
+      };
     default:
       return state;
   }

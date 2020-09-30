@@ -62,7 +62,7 @@ const Options = () => {
       <CustomHeader title={"Physics"} />
       <View style={{ flex: 1, position: "relative" }}>
         <StyledView>
-          <Picker
+          <StyledPicker
             mode="dialog"
             placeholder="Number of Questions"
             note
@@ -75,8 +75,8 @@ const Options = () => {
             <Picker.Item label="10 Questions" value={10} />
             <Picker.Item label="20 Questions" value={20} />
             <Picker.Item label="30 Questions" value={30} />
-          </Picker>
-          <Picker
+          </StyledPicker>
+          <StyledPicker
             mode="dialog"
             placeholder="Difficulty"
             note
@@ -89,9 +89,9 @@ const Options = () => {
             <Picker.Item label="Easy" value={DIFFICULTY.easy} />
             <Picker.Item label="Medium" value={DIFFICULTY.medium} />
             <Picker.Item label="Hard" value={DIFFICULTY.hard} />
-          </Picker>
+          </StyledPicker>
 
-          <Picker
+          <StyledPicker
             mode="dialog"
             placeholder="Type"
             note
@@ -107,7 +107,7 @@ const Options = () => {
             />
             <Picker.Item label="True / False" value={QUESTION_TYPE.BOOLEAN} />
             <Picker.Item label="Mixed" value={QUESTION_TYPE.MIXED} />
-          </Picker>
+          </StyledPicker>
           <StyledButton block onPress={handleSubmit}>
             <Text>Start</Text>
           </StyledButton>
@@ -117,6 +117,10 @@ const Options = () => {
     </StyledContainer>
   );
 };
+
+const StyledPicker = styled(Picker)`
+  margin: 5px 0;
+`;
 
 const StyledView = styled(ScrollView)`
   padding: 20px;

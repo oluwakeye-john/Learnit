@@ -41,6 +41,11 @@ export interface Question {
   type: QUESTION_TYPE;
 }
 
+export interface Answer {
+  value: string;
+  isCorrect: boolean;
+}
+
 export interface StartQuizPayload {
   numberOfQuestions: number;
   difficulty: DIFFICULTY;
@@ -55,4 +60,5 @@ export enum SessionType {
   UPDATE_QUESTIONS = "UPDATE_QUESTIONS",
   UPDATE_CURRENT_QUESTION = "UPDATE_CURRENT_QUESTION",
   UPDATE_ANSWERS = "UPDATE_ANSWERS",
+  UPDATE_SCORE = "UPDATE_SCORE",
 }

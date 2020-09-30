@@ -3,7 +3,11 @@ import { StyledContainer } from "../../components/general";
 import CustomHeader from "../../components/customHeader";
 import { Text, View } from "native-base";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { startQuiz, updateAnswers } from "../../redux/actions/session";
+import {
+  setCurrentQuestion,
+  startQuiz,
+  updateAnswers,
+} from "../../redux/actions/session";
 import Loader from "../../components/loader";
 import styled from "styled-components/native";
 import { Question } from "../../redux/types/session";
@@ -11,7 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
 import { shuffleArray } from "../../utils/shuffleArray";
 import { TouchableOpacity } from "react-native";
-import { unescape } from "html-escaper";
+import { formatText } from "../../utils/formatText";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Quiz = () => {
   const dispatch = useDispatch();
@@ -76,10 +81,14 @@ const MainQuiz = () => {
 
   const current: Question = questions[currentQuestion];
 
-  console.log(current, "pppppppppppp", questions, currentQuestion);
-
   const handleAnswer = (answer: string) => {
-    const newAnswers = { ...answers, [currentQuestion]: answer };
+    const newAnswers = {
+      ...answers,
+      [currentQuestion]: {
+        value: answer,
+        isCorrect: answer === current.correct_answer,
+      },
+    };
     dispatch(updateAnswers(newAnswers));
   };
 
@@ -94,16 +103,19 @@ const MainQuiz = () => {
     <>
       {current && (
         <StyledView>
-          <QuestionText>
-            {current.question && unescape(current.question)}
-          </QuestionText>
-          {options.map((opt: string, index: number) => (
-            <Option
-              option={opt}
-              onAnswer={handleAnswer}
-              selected={answers[currentQuestion] === opt}
-            />
-          ))}
+          <ScrollView>
+            <QuestionText>
+              {currentQuestion + 1}. {formatText(current.question)}
+            </QuestionText>
+            {options.map((opt: any, index: number) => (
+              <Option
+                option={opt}
+                onAnswer={handleAnswer}
+                selected={answers[currentQuestion]?.value === opt}
+              />
+            ))}
+            <Control />
+          </ScrollView>
         </StyledView>
       )}
     </>
@@ -122,10 +134,60 @@ const Option = ({ option, onAnswer, selected }: OptionType) => {
   };
   return (
     <OptionContainer onPress={handleAnswer} selected={selected}>
-      <OptionText selected={selected}>{option}</OptionText>
+      <OptionText selected={selected}>{formatText(option)}</OptionText>
     </OptionContainer>
   );
 };
+
+const Control = () => {
+  const dispatch = useDispatch();
+  const { currentQuestion, info, questions, answers } = useSelector(
+    (state: any) => state.sessionReducer,
+    shallowEqual
+  );
+
+  const handleNext = () => {
+    if (!(currentQuestion + 1 >= questions.length)) {
+      dispatch(setCurrentQuestion(currentQuestion + 1));
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion - 1 >= 0) {
+      dispatch(setCurrentQuestion(currentQuestion - 1));
+    }
+  };
+  return (
+    <ControlContainer>
+      <ControlButton onPress={handlePrevious}>
+        <ControlText>Previous</ControlText>
+      </ControlButton>
+      <ControlButton onPress={handleNext}>
+        <ControlText>Next</ControlText>
+      </ControlButton>
+    </ControlContainer>
+  );
+};
+
+const ControlContainer = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 50px;
+`;
+
+const ControlText = styled(Text)<{ theme: any }>`
+  /* color: ${({ theme }) => theme.colors.text}; */
+  color: #000;
+  text-align: center;
+`;
+
+const ControlButton = styled(TouchableOpacity)<{ theme: any }>`
+  padding: 10px;
+  width: 45%;
+  border: 2px solid ${({ theme }) => theme.colors.border};
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.primary};
+`;
 
 const OptionContainer = styled(TouchableOpacity)<{ selected: any }>`
   padding: 10px;
@@ -133,7 +195,7 @@ const OptionContainer = styled(TouchableOpacity)<{ selected: any }>`
   border: 2px solid ${({ theme }) => theme.colors.border};
   margin: 10px 0;
   background-color: ${({ selected, theme }) =>
-    selected ? theme.colors.text : theme.colors.background};
+    selected ? theme.colors.primary : theme.colors.background};
   border-radius: 4px;
 `;
 
