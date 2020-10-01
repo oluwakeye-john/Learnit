@@ -6,6 +6,7 @@ export interface Session {
   score: number;
   allCategories: CategoryType[];
   currentQuestion: number;
+  showResult: boolean;
 }
 
 export enum DIFFICULTY {
@@ -61,4 +62,6 @@ export enum SessionType {
   UPDATE_CURRENT_QUESTION = "UPDATE_CURRENT_QUESTION",
   UPDATE_ANSWERS = "UPDATE_ANSWERS",
   UPDATE_SCORE = "UPDATE_SCORE",
+  UPDATE_PLAYING = "UPDATE_PLAYING",
+  UPDATE_SHOW_RESULT = "UPDATE_SHOW_RESULT",
 }

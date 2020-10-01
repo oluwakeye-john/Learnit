@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyledContainer } from "../../components/general";
 import CustomHeader from "../../components/customHeader";
-import { Text, View } from "native-base";
+import { Badge, Button, Text, View } from "native-base";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
+  finishQuiz,
   setCurrentQuestion,
   startQuiz,
   updateAnswers,
@@ -17,6 +18,7 @@ import { shuffleArray } from "../../utils/shuffleArray";
 import { TouchableOpacity } from "react-native";
 import { formatText } from "../../utils/formatText";
 import { ScrollView } from "react-native-gesture-handler";
+import Result from "./Result";
 
 const Quiz = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,10 @@ const Quiz = () => {
   const info = useSelector(
     (state: any) => state.sessionReducer.info,
     shallowEqual
+  );
+
+  const showResult = useSelector(
+    (state: any) => state.sessionReducer.showResult
   );
 
   const category = useSelector(
@@ -67,6 +73,7 @@ const Quiz = () => {
     <StyledContainer>
       <CustomHeader title={"Quiz"} />
       {waiting ? <Loader /> : <MainQuiz />}
+      <Result open={showResult} />
     </StyledContainer>
   );
 };
@@ -104,9 +111,14 @@ const MainQuiz = () => {
       {current && (
         <StyledView>
           <ScrollView>
-            <QuestionText>
-              {currentQuestion + 1}. {formatText(current.question)}
-            </QuestionText>
+            <View style={{ alignSelf: "center" }}>
+              <StyledBadge>
+                <Text style={{ color: "#000" }}>
+                  {currentQuestion + 1}/{questions.length}
+                </Text>
+              </StyledBadge>
+            </View>
+            <QuestionText>{formatText(current.question)}</QuestionText>
             {options.map((opt: any, index: number) => (
               <Option
                 option={opt}
@@ -141,29 +153,34 @@ const Option = ({ option, onAnswer, selected }: OptionType) => {
 
 const Control = () => {
   const dispatch = useDispatch();
-  const { currentQuestion, info, questions, answers } = useSelector(
+  const { currentQuestion, info, questions, answers, score } = useSelector(
     (state: any) => state.sessionReducer,
     shallowEqual
   );
+  const canGoNext = !(currentQuestion + 1 >= questions.length);
+  const canGoPrevious = currentQuestion - 1 >= 0;
 
   const handleNext = () => {
-    if (!(currentQuestion + 1 >= questions.length)) {
+    if (canGoNext) {
       dispatch(setCurrentQuestion(currentQuestion + 1));
+    } else {
+      dispatch(finishQuiz());
     }
   };
 
   const handlePrevious = () => {
-    if (currentQuestion - 1 >= 0) {
+    if (canGoPrevious) {
       dispatch(setCurrentQuestion(currentQuestion - 1));
     }
   };
   return (
     <ControlContainer>
-      <ControlButton onPress={handlePrevious}>
+      <ControlButton disabled={!canGoPrevious} onPress={handlePrevious}>
         <ControlText>Previous</ControlText>
       </ControlButton>
+      {/* <StyledText>{score}</StyledText> */}
       <ControlButton onPress={handleNext}>
-        <ControlText>Next</ControlText>
+        <ControlText>{canGoNext ? "Next" : "Submit"}</ControlText>
       </ControlButton>
     </ControlContainer>
   );
@@ -176,23 +193,25 @@ const ControlContainer = styled(View)`
 `;
 
 const ControlText = styled(Text)<{ theme: any }>`
-  /* color: ${({ theme }) => theme.colors.text}; */
-  color: #000;
+  color: ${({ theme }) => theme.colors.text};
+  /* color: #000; */
   text-align: center;
 `;
 
 const ControlButton = styled(TouchableOpacity)<{ theme: any }>`
   padding: 10px;
+  color: #000;
+  text-align: center;
   width: 45%;
   border: 2px solid ${({ theme }) => theme.colors.border};
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.primary};
+  /* background-color: ${({ theme }) => theme.colors.primary}; */
 `;
 
 const OptionContainer = styled(TouchableOpacity)<{ selected: any }>`
   padding: 10px;
   width: 100%;
-  border: 2px solid ${({ theme }) => theme.colors.border};
+  border: 1.5px solid ${({ theme }) => theme.colors.border};
   margin: 10px 0;
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.primary : theme.colors.background};
@@ -204,8 +223,13 @@ const StyledView = styled(View)`
   padding: 0 10px;
   padding-top: 40px;
 `;
+
 const StyledText = styled(Text)<{ theme: any }>`
   color: ${({ theme }) => theme.colors.text};
+`;
+
+const StyledBadge = styled(Badge)<{ theme: any }>`
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 const OptionText = styled(StyledText)<{ selected: boolean; theme: any }>`
@@ -216,6 +240,7 @@ const OptionText = styled(StyledText)<{ selected: boolean; theme: any }>`
 const QuestionText = styled(StyledText)`
   font-size: 20px;
   text-align: center;
+  margin-top: 15px;
   margin-bottom: 40px;
 `;
 

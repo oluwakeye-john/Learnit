@@ -3,6 +3,9 @@ import { Button, Container, Content, H1, Text, View } from "native-base";
 import React from "react";
 import styled from "styled-components/native";
 import { StyledContainer } from "../../components/general";
+import { useSpring, animated } from "react-spring/native";
+
+const Animated = animated(View);
 
 const Home = () => {
   const navigation = useNavigation();
@@ -10,6 +13,15 @@ const Home = () => {
     title: "Learnit",
     headerShown: false,
   });
+
+  const props = useSpring({
+    to: {
+      opacity: 1,
+      backgroundColor: "green",
+    },
+    from: { opacity: 0, backgroundColor: "red" },
+  });
+
   return (
     <StyledContainer>
       <StyledView>
@@ -22,10 +34,18 @@ const Home = () => {
         >
           <Text>Start Quiz</Text>
         </StyledStartButton>
+
+        <Animated style={props}>
+          <StyledText>Hello world</StyledText>
+        </Animated>
       </StyledView>
     </StyledContainer>
   );
 };
+
+const StyledText = styled.Text`
+  color: #fff;
+`;
 
 const StyledView = styled(View)`
   align-items: center;

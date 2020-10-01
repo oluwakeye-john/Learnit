@@ -20,6 +20,7 @@ const initialState = {
   },
   allCategories: [],
   currentQuestion: 0,
+  showResult: false,
 };
 
 export const sessionReducer = (state: Session = initialState, action: any) => {
@@ -48,6 +49,11 @@ export const sessionReducer = (state: Session = initialState, action: any) => {
       return {
         ...state,
         currentQuestion: action.payload,
+      };
+    case SessionType.UPDATE_SHOW_RESULT:
+      return {
+        ...state,
+        showResult: action.payload,
       };
     case SessionType.UPDATE_ANSWERS:
       return {

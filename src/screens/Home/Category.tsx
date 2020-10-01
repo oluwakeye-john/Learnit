@@ -1,9 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
-import { Container, List, Text, ListItem, Content } from "native-base";
+import { Container, List, Text, ListItem, Content, Badge } from "native-base";
 import React, { useEffect, useState } from "react";
 import { ScrollView, RefreshControl, FlatList, View } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { AnyAction } from "redux";
 import styled from "styled-components/native";
 import CustomHeader from "../../components/customHeader";
 import Loader from "../../components/loader";
@@ -14,6 +13,9 @@ import { CategoryType } from "../../redux/types/session";
 const Item = ({ item, handleClick }: any) => {
   return (
     <ListItem noBorder onPress={() => handleClick(item)}>
+      <StyledBadge>
+        <BadgeText>{item.name[0]}</BadgeText>
+      </StyledBadge>
       <StyledText>{item.name}</StyledText>
     </ListItem>
   );
@@ -82,6 +84,15 @@ const StyledView = styled(ScrollView)`
   padding-top: 10px;
   flex: 1;
   margin-bottom: 10px;
+`;
+
+const StyledBadge = styled(Badge)`
+  margin-right: 10px;
+  background-color: ${({ theme }) => theme.colors.primary};
+`;
+
+const BadgeText = styled(Text)`
+  color: #fff;
 `;
 
 export default Category;
