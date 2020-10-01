@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, Picker, Text, View, Content } from "native-base";
+import { Button, Picker, Text, View, Content, Switch } from "native-base";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -71,10 +71,10 @@ const Options = () => {
               handleChange(INPUT_OPTIONS.numberOfQuestions, value)
             }
           >
-            <Picker.Item label="-- Number of Questions --" value={1} />
-            <Picker.Item label="10 Questions" value={10} />
-            <Picker.Item label="20 Questions" value={20} />
-            <Picker.Item label="30 Questions" value={30} />
+            <Picker.Item label="-- Number of Questions --" value={0} />
+            <Picker.Item label="10 questions" value={10} />
+            <Picker.Item label="20 questions" value={20} />
+            <Picker.Item label="30 questions" value={30} />
           </StyledPicker>
           <StyledPicker
             mode="dialog"

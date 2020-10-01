@@ -12,7 +12,7 @@ import { CategoryType } from "../../redux/types/session";
 
 const Item = ({ item, handleClick }: any) => {
   return (
-    <ListItem noBorder onPress={() => handleClick(item)}>
+    <ListItem key={item.id} noBorder onPress={() => handleClick(item)}>
       <StyledBadge>
         <BadgeText>{item.name[0]}</BadgeText>
       </StyledBadge>
@@ -54,7 +54,7 @@ const Category = () => {
     <StyledContainer>
       <CustomHeader title={"Categories"} />
       {allCategories.length ? (
-        <View>
+        <View style={{ paddingVertical: 10 }}>
           <List
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={updateList} />

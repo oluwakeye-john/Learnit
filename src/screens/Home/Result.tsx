@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, H1, Text, View } from "native-base";
 import React from "react";
 import { Modal } from "react-native";
@@ -16,9 +17,11 @@ const Result = ({ open }: ResultType) => {
     shallowEqual
   );
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const closeModal = () => {
     dispatch(resetQuiz());
+    navigation.navigate("Home");
   };
 
   const percent = (session?.score / session?.questions?.length) * 100;

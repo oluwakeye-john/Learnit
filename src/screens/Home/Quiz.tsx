@@ -19,11 +19,36 @@ import { TouchableOpacity } from "react-native";
 import { formatText } from "../../utils/formatText";
 import { ScrollView } from "react-native-gesture-handler";
 import Result from "./Result";
+import { MaterialIcons } from "@expo/vector-icons";
+
+const StopButton = () => {
+  const navigation = useNavigation();
+  const requestClose = () => {
+    Alert.alert("End Quiz", "Are you sure you want to quit?", [
+      {
+        text: "Yes",
+        onPress: () => navigation.navigate("Home"),
+      },
+      {
+        text: "No",
+      },
+    ]);
+  };
+  return (
+    <RightView transparent onPress={requestClose}>
+      <MaterialIcons size={25} name="close" color="#fff" />
+    </RightView>
+  );
+};
 
 const Quiz = () => {
   const dispatch = useDispatch();
   const [waiting, setWaiting] = useState(true);
   const navigation = useNavigation();
+
+  navigation.setOptions({
+    headerRight: () => <StopButton />,
+  });
 
   const info = useSelector(
     (state: any) => state.sessionReducer.info,
@@ -121,6 +146,7 @@ const MainQuiz = () => {
             <QuestionText>{formatText(current.question)}</QuestionText>
             {options.map((opt: any, index: number) => (
               <Option
+                key={index}
                 option={opt}
                 onAnswer={handleAnswer}
                 selected={answers[currentQuestion]?.value === opt}
@@ -176,11 +202,22 @@ const Control = () => {
   return (
     <ControlContainer>
       <ControlButton disabled={!canGoPrevious} onPress={handlePrevious}>
-        <ControlText>Previous</ControlText>
+        <ControlText>
+          <MaterialIcons name="chevron-left" size={25} />
+          {/* Previous */}
+        </ControlText>
       </ControlButton>
       {/* <StyledText>{score}</StyledText> */}
       <ControlButton onPress={handleNext}>
-        <ControlText>{canGoNext ? "Next" : "Submit"}</ControlText>
+        <ControlText>
+          {canGoNext ? (
+            <MaterialIcons name="chevron-right" size={25} />
+          ) : (
+            <MaterialIcons name="last-page" size={25} />
+          )}
+
+          {/* {canGoNext ? "Next" : "Submit"} */}
+        </ControlText>
       </ControlButton>
     </ControlContainer>
   );
@@ -193,8 +230,8 @@ const ControlContainer = styled(View)`
 `;
 
 const ControlText = styled(Text)<{ theme: any }>`
-  color: ${({ theme }) => theme.colors.text};
-  /* color: #000; */
+  /* color: ${({ theme }) => theme.colors.text}; */
+  color: #000;
   text-align: center;
 `;
 
@@ -205,7 +242,7 @@ const ControlButton = styled(TouchableOpacity)<{ theme: any }>`
   width: 45%;
   border: 2px solid ${({ theme }) => theme.colors.border};
   border-radius: 4px;
-  /* background-color: ${({ theme }) => theme.colors.primary}; */
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 const OptionContainer = styled(TouchableOpacity)<{ selected: any }>`
@@ -242,6 +279,10 @@ const QuestionText = styled(StyledText)`
   text-align: center;
   margin-top: 15px;
   margin-bottom: 40px;
+`;
+
+const RightView = styled(Button)`
+  margin-right: 20px;
 `;
 
 export default Quiz;

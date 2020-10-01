@@ -34,17 +34,19 @@ const Home = () => {
         >
           <Text>Start Quiz</Text>
         </StyledStartButton>
-
-        <Animated style={props}>
-          <StyledText>Hello world</StyledText>
-        </Animated>
+        <View>
+          <StyledText>
+            Improve your app build skill and upgrade your personal growth
+          </StyledText>
+        </View>
       </StyledView>
     </StyledContainer>
   );
 };
 
 const StyledText = styled.Text`
-  color: #fff;
+  color: #aaa;
+  text-align: center;
 `;
 
 const StyledView = styled(View)`

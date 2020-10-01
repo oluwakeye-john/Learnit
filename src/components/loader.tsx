@@ -19,8 +19,9 @@ const Loader = ({ title = "Please wait" }: LoaderType) => {
 
 export default Loader;
 
-const StyledView = styled.View`
+const StyledView = styled.View<{ theme: any }>`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
