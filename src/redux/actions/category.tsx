@@ -2,15 +2,19 @@ import { Dispatch } from "redux";
 import { getCategoriesCall } from "../../services/request";
 import { action } from "typesafe-actions";
 import { SessionType } from "../types/session";
+import { ErrorHandler } from "../../utils/errorHandler";
 
-export const getCategoriesAction = (onSuccess?: Function) => {
+export const getCategoriesAction = (
+  onSuccess?: Function,
+  onError?: Function
+) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await getCategoriesCall();
       dispatch(getCategoriesActionSuccess(response.data.trivia_categories));
       onSuccess && onSuccess();
     } catch (error) {
-      console.error(error.response || error.message);
+      ErrorHandler(error, onError);
     }
   };
 };

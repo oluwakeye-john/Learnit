@@ -4,6 +4,9 @@ import Home from "./Home";
 import Category from "./Category";
 import Options from "./Options";
 import Quiz from "./Quiz";
+import { Button, Text, View } from "native-base";
+import styled from "styled-components/native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 

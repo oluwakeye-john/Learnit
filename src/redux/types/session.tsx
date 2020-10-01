@@ -6,6 +6,7 @@ export interface Session {
   score: number;
   allCategories: CategoryType[];
   currentQuestion: number;
+  showResult: boolean;
 }
 
 export enum DIFFICULTY {
@@ -41,6 +42,11 @@ export interface Question {
   type: QUESTION_TYPE;
 }
 
+export interface Answer {
+  value: string;
+  isCorrect: boolean;
+}
+
 export interface StartQuizPayload {
   numberOfQuestions: number;
   difficulty: DIFFICULTY;
@@ -55,4 +61,7 @@ export enum SessionType {
   UPDATE_QUESTIONS = "UPDATE_QUESTIONS",
   UPDATE_CURRENT_QUESTION = "UPDATE_CURRENT_QUESTION",
   UPDATE_ANSWERS = "UPDATE_ANSWERS",
+  UPDATE_SCORE = "UPDATE_SCORE",
+  UPDATE_PLAYING = "UPDATE_PLAYING",
+  UPDATE_SHOW_RESULT = "UPDATE_SHOW_RESULT",
 }

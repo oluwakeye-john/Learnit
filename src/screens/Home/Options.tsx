@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, Picker, Text, View, Content } from "native-base";
+import { Button, Picker, Text, View, Content, Switch } from "native-base";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -62,7 +62,7 @@ const Options = () => {
       <CustomHeader title={"Physics"} />
       <View style={{ flex: 1, position: "relative" }}>
         <StyledView>
-          <Picker
+          <StyledPicker
             mode="dialog"
             placeholder="Number of Questions"
             note
@@ -71,12 +71,12 @@ const Options = () => {
               handleChange(INPUT_OPTIONS.numberOfQuestions, value)
             }
           >
-            <Picker.Item label="-- Number of Questions --" value={1} />
-            <Picker.Item label="10 Questions" value={10} />
-            <Picker.Item label="20 Questions" value={20} />
-            <Picker.Item label="30 Questions" value={30} />
-          </Picker>
-          <Picker
+            <Picker.Item label="-- Number of Questions --" value={0} />
+            <Picker.Item label="10 questions" value={10} />
+            <Picker.Item label="20 questions" value={20} />
+            <Picker.Item label="30 questions" value={30} />
+          </StyledPicker>
+          <StyledPicker
             mode="dialog"
             placeholder="Difficulty"
             note
@@ -89,9 +89,9 @@ const Options = () => {
             <Picker.Item label="Easy" value={DIFFICULTY.easy} />
             <Picker.Item label="Medium" value={DIFFICULTY.medium} />
             <Picker.Item label="Hard" value={DIFFICULTY.hard} />
-          </Picker>
+          </StyledPicker>
 
-          <Picker
+          <StyledPicker
             mode="dialog"
             placeholder="Type"
             note
@@ -107,7 +107,7 @@ const Options = () => {
             />
             <Picker.Item label="True / False" value={QUESTION_TYPE.BOOLEAN} />
             <Picker.Item label="Mixed" value={QUESTION_TYPE.MIXED} />
-          </Picker>
+          </StyledPicker>
           <StyledButton block onPress={handleSubmit}>
             <Text>Start</Text>
           </StyledButton>
@@ -117,6 +117,10 @@ const Options = () => {
     </StyledContainer>
   );
 };
+
+const StyledPicker = styled(Picker)`
+  margin: 5px 0;
+`;
 
 const StyledView = styled(ScrollView)`
   padding: 20px;
