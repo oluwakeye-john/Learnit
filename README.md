@@ -1,8 +1,7 @@
 # Learnit
 
-![Hello](./docs/img4.jpeg)
-![Hello](./docs/img5.jpeg)
-![Hello](./docs/img2.jpeg)
-![Hello](./docs/img6.jpeg)
-![Hello](./docs/img3.jpeg)
-![Hello](./docs/img1.jpeg)
+![Hello](./docs/img04.jpeg)
+![Hello](./docs/img05.jpeg)
+![Hello](./docs/img06.jpeg)
+![Hello](./docs/img03.jpeg)
+![Hello](./docs/img01.jpeg)
